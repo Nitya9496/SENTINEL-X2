@@ -428,13 +428,21 @@ if os.path.exists(static_dir):
     app.mount("/static", StaticFiles(directory=static_dir), name="static")
 
 @app.get("/")
+@app.get("/index.html")
 async def serve_index():
-    if os.path.exists(root_index):
-        return FileResponse(root_index)
-    if os.path.exists(os.path.join(static_dir, "index.html")):
-        return FileResponse(os.path.join(static_dir, "index.html"))
+    candidates = [
+        root_index,
+        os.path.join(os.getcwd(), "index.html"),
+        os.path.join(static_dir, "index.html"),
+        os.path.join(os.getcwd(), "public", "index.html"),
+        os.path.join(root_dir, "public", "index.html"),
+    ]
+    for candidate in candidates:
+        if os.path.exists(candidate):
+            return FileResponse(candidate)
     return JSONResponse({
         "status": "online",
         "service": "SENTINEL-X Supervisory Engine",
         "console_ready": True
     })
+

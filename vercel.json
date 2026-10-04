@@ -1,25 +1,16 @@
 {
-  "functions": {
-    "api/**/*.py": {
-      "includeFiles": "{backend/**,static/**,index.html}"
-    }
-  },
   "rewrites": [
     {
       "source": "/api/(.*)",
-      "destination": "/api/index.py"
+      "destination": "/main.py"
     },
     {
-      "source": "/api",
-      "destination": "/api/index.py"
+      "source": "/docs",
+      "destination": "/main.py"
     },
     {
-      "source": "/static/(.*)",
-      "destination": "/static/$1"
-    },
-    {
-      "source": "/",
-      "destination": "/index.html"
+      "source": "/openapi.json",
+      "destination": "/main.py"
     }
   ]
 }
