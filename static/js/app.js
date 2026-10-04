@@ -22,17 +22,18 @@ window.App = {
   },
 
   initTheme() {
-    let theme = 'light';
+    let theme = 'dark';
     try {
       const userTheme = localStorage.getItem('sentinel_theme_user_choice');
-      if (userTheme === 'dark') theme = 'dark';
+      if (userTheme === 'light') theme = 'light';
+      else if (userTheme === 'dark') theme = 'dark';
     } catch(e) {}
     this.setTheme(theme);
   },
 
   toggleTheme() {
-    const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
-    const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+    const currentTheme = document.documentElement.getAttribute('data-theme') || 'dark';
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     this.setTheme(newTheme);
     try {
       localStorage.setItem('sentinel_theme_user_choice', newTheme);
