@@ -1,4 +1,9 @@
 {
+  "functions": {
+    "api/**/*.py": {
+      "includeFiles": "{backend/**,static/**,index.html}"
+    }
+  },
   "rewrites": [
     {
       "source": "/api/(.*)",
@@ -7,6 +12,14 @@
     {
       "source": "/api",
       "destination": "/api/index.py"
+    },
+    {
+      "source": "/static/(.*)",
+      "destination": "/static/$1"
+    },
+    {
+      "source": "/",
+      "destination": "/index.html"
     }
   ]
 }
