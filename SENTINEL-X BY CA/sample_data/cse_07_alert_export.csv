@@ -1,0 +1,6 @@
+alert_id,timestamp,asset_id,severity,category,status,acknowledged_at,closed_at,investigation_id,remediation_status
+A-10231,2026-10-03T14:32:10,SERVER-17,Critical,Malware C2 Communication Beacon,Closed,2026-10-03T14:35:12,2026-10-03T14:39:15,,None
+A-10248,2026-10-03T15:10:04,RTU-09,Critical,Unauthorized Modbus Function Code Write,Closed,2026-10-03T15:11:30,2026-10-03T15:14:22,,None
+A-10312,2026-10-03T16:44:19,HMI-02,Critical,Privilege Escalation via Service Execution,Closed,2026-10-03T16:46:00,2026-10-03T16:50:30,,None
+A-10317,2026-10-03T17:02:11,SERVER-17,Critical,Repeated Outbound Port 4444 Connection,Closed,2026-10-03T17:04:15,2026-10-03T17:07:44,,None
+A-10405,2026-10-03T18:15:33,PLC-CORE-01,Critical,Firmware Verification Signature Mismatch,Closed,2026-10-03T18:18:20,2026-10-03T18:23:51,,None

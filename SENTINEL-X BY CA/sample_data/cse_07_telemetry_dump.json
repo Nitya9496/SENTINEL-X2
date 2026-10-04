@@ -1,0 +1,22 @@
+[
+  {
+    "event_id": "EVT-894102",
+    "timestamp": "2026-10-03T14:32:05",
+    "asset_id": "SERVER-17",
+    "stream": "NetFlow_v9",
+    "src_ip": "10.240.12.17",
+    "dst_ip": "198.51.100.42",
+    "dst_port": 4444,
+    "proto": "TCP",
+    "bytes": 552960
+  },
+  {
+    "event_id": "EVT-894109",
+    "timestamp": "2026-10-03T15:10:01",
+    "asset_id": "RTU-09",
+    "stream": "OT_Modbus",
+    "function_code": "0x05",
+    "action": "Force Single Coil",
+    "authorized": false
+  }
+]
