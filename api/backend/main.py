@@ -165,12 +165,14 @@ raw_evidence_records = [
 # API ENDPOINTS
 # ============================================================================
 
+@app.get("/overview")
 @app.get("/api/overview")
 async def get_overview():
     """Screen 1 Top Cards & System Overview"""
     return overview_store
 
 
+@app.get("/cses")
 @app.get("/api/cses")
 async def get_cses(
     sector: Optional[str] = None,
@@ -201,6 +203,7 @@ async def get_cses(
     return results
 
 
+@app.get("/cses/{cse_id}")
 @app.get("/api/cses/{cse_id}")
 async def get_cse_detail(cse_id: str):
     """Screen 2 CSE Detail Header, Breakdown Cards & Findings"""
@@ -216,6 +219,7 @@ async def get_cse_detail(cse_id: str):
     }
 
 
+@app.get("/findings/{finding_id}")
 @app.get("/api/findings/{finding_id}")
 async def get_finding_detail(finding_id: str):
     """Screen 3 Finding Details, 'Why Flagged?' panel, supporting records, explanations"""
@@ -230,6 +234,7 @@ async def get_finding_detail(finding_id: str):
     }
 
 
+@app.post("/findings/{finding_id}/review")
 @app.post("/api/findings/{finding_id}/review")
 async def update_finding_review(finding_id: str, payload: Dict[str, Any]):
     """Human-in-the-loop supervisor action on finding"""
@@ -251,6 +256,7 @@ async def update_finding_review(finding_id: str, payload: Dict[str, Any]):
     return {"success": True, "finding": finding}
 
 
+@app.get("/evidence-graph/{case_id}")
 @app.get("/api/evidence-graph/{case_id}")
 async def get_evidence_graph(case_id: str):
     """Screen 4 Supervisory Evidence Graph (The Hero Feature)"""
@@ -261,6 +267,7 @@ async def get_evidence_graph(case_id: str):
     return graph
 
 
+@app.get("/evidence-records")
 @app.get("/api/evidence-records")
 async def get_evidence_records(
     cse_id: Optional[str] = None,
@@ -290,12 +297,14 @@ async def get_evidence_records(
     return results
 
 
+@app.get("/audit-logs")
 @app.get("/api/audit-logs")
 async def get_audit_logs():
     """Supervisory Audit Trail"""
     return list(reversed(audit_log))
 
 
+@app.post("/run-analytics")
 @app.post("/api/run-analytics")
 async def run_supervisory_analytics():
     """
@@ -327,6 +336,7 @@ async def run_supervisory_analytics():
     }
 
 
+@app.post("/upload")
 @app.post("/api/upload")
 async def upload_soc_data(
     file: Optional[UploadFile] = File(None),
@@ -369,6 +379,7 @@ async def upload_soc_data(
     }
 
 
+@app.get("/reports/{cse_id}")
 @app.get("/api/reports/{cse_id}")
 async def generate_supervisory_report(cse_id: str):
     """Official NCIIPC Supervisory Assessment Briefing Report Data for any CSE"""
@@ -406,6 +417,7 @@ async def generate_supervisory_report(cse_id: str):
 
 
 # API Health Check & Root Info
+@app.get("/health")
 @app.get("/api")
 @app.get("/api/health")
 async def health_check():
@@ -416,6 +428,7 @@ async def health_check():
         "mandate": "IT Act Section 70A // NCIIPC Cyber Command",
         "cses_monitored": len(cses_store)
     }
+
 
 # Mount Static directory & Root Fallback
 root_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
