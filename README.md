@@ -206,6 +206,14 @@ d:\SENTINEL-X\
 
 ---
 
+## 👥 9. Contributors & Team Details
+
+| Role | Name | Responsibilities |
+|---|---|---|
+| **Team Lead & System Architect** | *[Insert Name]* | Core architecture, Deterministic rules engine, SIH Coordination |
+| **Backend & Analytics Engineer** | *[Insert Name]* | FastAPI REST server, SOC data normalization, Graph algorithms |
+| **Frontend & UI/UX Specialist** | *[Insert Name]* | Executive SPA console, SVG evidence graph, Design tokens |
+| **Cybersecurity & Compliance Lead** | *[Insert Name]* | Regulatory framework alignment, SOP validation, Audit trail |
 
 ---
 

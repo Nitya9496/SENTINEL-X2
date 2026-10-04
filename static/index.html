@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SENTINEL-X — Supervisory Analytics Tool for SOC Assessment (SAT-SA)</title>
+  <link rel="stylesheet" href="/static/css/styles.css?v=7.0">
+</head>
+
+<body>
+
+  <!-- Ambient Light Layer -->
+  <div class="bg-ambient-layer">
+    <div class="ambient-bloom"></div>
+  </div>
+
+  <div class="app-shell">
+
+    <!-- Top Statutory Agency Strip -->
+    <div class="agency-strip">
+      <div class="agency-strip-left">
+        <div class="telemetry-live-pill">
+          <span class="pulse-indicator" style="width: 6px; height: 6px; background-color: #34D399;"></span>
+          <span>LIVE AUDIT TELEMETRY: 20/20 CSEs SYNCED</span>
+        </div>
+        <span class="statutory-tag">National Critical Information Infrastructure Protection Centre (NCIIPC)</span>
+      </div>
+      <div class="agency-strip-right">
+        <div class="air-gap-pill">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          <span>AIR-GAPPED AUDIT LEDGER // ZERO CLOUD DEPENDENCY</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Master Header & Navigation -->
+    <header class="master-header">
+
+      <!-- Brand Section -->
+      <div class="brand-section" onclick="window.App.navigateTo('dashboard')">
+        <div class="brand-logo-container">
+          <img src="/static/img/sentinel-logo.svg" alt="SENTINEL-X Shield Logo" class="brand-logo-img">
+        </div>
+        <div class="brand-meta">
+          <h1 class="gradient-text-hero">SENTINEL-X</h1>
+          <p>Supervisory Analytics Tool for SOC Assessment</p>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <nav class="nav-tabs-group">
+        <button class="nav-tab-btn active" data-screen="dashboard" onclick="window.App.navigateTo('dashboard')">
+          Command Overview
+        </button>
+
+        <button class="nav-tab-btn" data-screen="cse-detail" onclick="window.App.openCse('CSE-07')">
+          CSE Assessment
+          <span class="nav-tab-badge">7 HIGH</span>
+        </button>
+
+        <button class="nav-tab-btn" data-screen="finding-detail" onclick="window.App.openFinding('F-07-01')">
+          Findings & Gaps
+        </button>
+
+        <button class="nav-tab-btn" data-screen="evidence-graph" onclick="window.App.openGraph('CASE-GRAPH-07-01')">
+          Evidence Graph
+          <span class="badge badge-tag"
+            style="font-size: 9px; color: var(--accent-theme); padding: 1px 5px; font-weight: 800;">HERO</span>
+        </button>
+
+        <button class="nav-tab-btn" data-screen="evidence-explorer"
+          onclick="window.App.navigateTo('evidence-explorer')">
+          Evidence Explorer
+        </button>
+
+        <button class="nav-tab-btn" data-screen="reports" onclick="window.App.navigateTo('reports')">
+          Directive Report
+        </button>
+      </nav>
+
+      <!-- Right Action CTAs (High-Value Supervisory Tools) -->
+      <div class="header-actions">
+        <!-- Theme Toggle Button -->
+        <button class="theme-toggle-btn" id="theme-toggle" onclick="window.App.toggleTheme()"
+          title="Switch Light/Dark Mode">
+          🌙 Dark Mode
+        </button>
+
+        <!-- 1-Click Export Dossier -->
+        <button class="btn btn-secondary btn-sm" onclick="window.App.navigateTo('reports')"
+          title="Generate and export executive supervisory audit dossier">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+          </svg>
+          Export Dossier
+        </button>
+
+        <!-- Issue Statutory Directive -->
+        <button class="btn btn-primary btn-sm" onclick="window.App.openDirectiveModal('Confirmed Finding')"
+          title="Issue formal statutory directive order under IT Act Section 70A">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+          Issue Directive
+        </button>
+
+        <!-- Ingest Dataset Modal -->
+        <button class="btn-upload-ingest" onclick="window.App.openUploadModal()"
+          title="Ingest offline SOC telemetry / SIEM logs">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+            <polyline points="17 8 12 3 7 8"></polyline>
+            <line x1="12" y1="3" x2="12" y2="15"></line>
+          </svg>
+          Ingest SOC Logs
+        </button>
+      </div>
+
+    </header>
+
+    <!-- Main Content Workspace -->
+    <main class="content-wrapper">
+
+      <!-- ==================================================================
+           SCREEN 1: OVERALL DASHBOARD (COMMAND OVERVIEW)
+           ================================================================== -->
+      <section class="view-screen active" id="screen-dashboard">
+
+        <!-- Evaluator Context Banner -->
+        <div class="evaluator-banner glass-card">
+          <div class="evaluator-banner-text">
+            <h3>Supervisory Mandate: <span class="gradient-text-hero">Overseeing the SOC's Operational Integrity</span>
+            </h3>
+            <p>Unlike standard SIEM tools hunting external attackers, SENTINEL-X reconstructs what should have happened
+              vs. what actually happened across 20 Critical Sector Entities (CSEs) to uncover execution gaps, negative
+              space, and unverified ticket closures.</p>
+          </div>
+          <div
+            style="font-size: 11px; font-family: var(--font-mono); color: var(--accent-theme); white-space: nowrap; font-weight: 800;">
+            IT ACT SEC 70A
+          </div>
+        </div>
+
+        <!-- ================================================================
+             TOP SUPERVISORY FINDING HERO SECTION (CORE USP SHOWCASE)
+             ================================================================ -->
+        <div class="top-finding-hero-card glass-card">
+          <div class="top-finding-header">
+            <div class="top-finding-title-group">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 6px;">
+                <span class="badge badge-tag" style="color: var(--accent-theme); font-weight: 800;">TOP SUPERVISORY
+                  FINDING // CORE USP</span>
+                <span class="badge badge-high">EXECUTION GAP</span>
+              </div>
+              <h2 class="gradient-text-hero">
+                CSE-07 — Northern Regional Load Despatch Centre (NRLDC)
+              </h2>
+              <p>
+                Critical alerts closed without mandatory case investigation — <strong>318 potential execution
+                  gaps</strong> detected across SCADA & RTU telemetry streams.
+              </p>
+            </div>
+
+            <div class="top-finding-score-pill">
+              <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+                Supervisory Attention</div>
+              <div class="score-num">87 <span style="font-size: 16px; color: var(--text-muted); font-weight: 500;">/
+                  100</span></div>
+              <div style="font-size: 11px; color: var(--status-critical); font-weight: 700;">318 Uninvestigated Closures
+              </div>
+            </div>
+          </div>
+
+          <div class="top-finding-body-grid">
+            <!-- Left: Evidentiary Disparity Matrix -->
+            <div>
+              <div
+                style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">
+                EVIDENTIARY DISPARITY MATRIX
+              </div>
+              <div class="disparity-kpi-subgrid">
+                <div class="disparity-mini-cell">
+                  <div class="num">2,430</div>
+                  <div class="lbl">Critical Alerts</div>
+                </div>
+                <div class="disparity-mini-cell">
+                  <div class="num">2,112</div>
+                  <div class="lbl">Investigations</div>
+                </div>
+                <div class="disparity-mini-cell">
+                  <div class="num alert-red">318</div>
+                  <div class="lbl" style="color: var(--status-critical);">Potential Gaps</div>
+                </div>
+              </div>
+              <div style="font-size: 12px; color: var(--text-secondary); margin-top: 10px; line-height: 1.45;">
+                <span style="font-weight: 700; color: var(--accent-theme);">Deterministic Rule:</span> Alerts with
+                severity = 'CRITICAL' where <code>investigation_ticket_id IS NULL</code> violate NCIIPC Sec 4.2
+                mandatory SOP.
+              </div>
+            </div>
+
+            <!-- Right: Lifecycle Reconstruction Mini-Track -->
+            <div class="lifecycle-reconstruction-box">
+              <div
+                style="font-size: 11.5px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px;">
+                RECONSTRUCTED OPERATIONAL LIFECYCLE
+              </div>
+              <div class="lifecycle-flow-track">
+                <div class="flow-step-node">
+                  <div class="flow-step-icon ok">✓</div>
+                  <span class="flow-step-lbl">Asset Active</span>
+                </div>
+                <span class="flow-arrow-sep">→</span>
+                <div class="flow-step-node">
+                  <div class="flow-step-icon ok">✓</div>
+                  <span class="flow-step-lbl">Telemetry</span>
+                </div>
+                <span class="flow-arrow-sep">→</span>
+                <div class="flow-step-node">
+                  <div class="flow-step-icon ok">✓</div>
+                  <span class="flow-step-lbl">Alert Fired</span>
+                </div>
+                <span class="flow-arrow-sep broken">⇢</span>
+                <div class="flow-step-node">
+                  <div class="flow-step-icon bypassed">✕</div>
+                  <span class="flow-step-lbl" style="color: var(--status-critical);">Investigation</span>
+                </div>
+                <span class="flow-arrow-sep broken">⇢</span>
+                <div class="flow-step-node">
+                  <div class="flow-step-icon warn">⊘</div>
+                  <span class="flow-step-lbl" style="color: var(--status-warning);">Closed in 7m</span>
+                </div>
+              </div>
+              <div style="font-size: 11.5px; color: var(--text-muted); font-family: var(--font-mono);">
+                Peer Median Closure: 46 mins • NRLDC Anomalous Velocity: 7.08 mins
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions -->
+          <div class="top-finding-actions-row">
+            <div style="display: flex; align-items: center; gap: 10px;">
+              <button class="btn btn-secondary btn-sm" id="btn-why-flagged-toggle"
+                onclick="window.App.toggleWhyFlaggedDrawer()">
+                Why Flagged? ▾
+              </button>
+              <button class="btn btn-primary" onclick="window.App.openGraph('CASE-GRAPH-07-01')">
+                View Evidence Graph (Core USP) →
+              </button>
+            </div>
+            <div style="display: flex; align-items: center; gap: 8px;">
+              <button class="btn btn-secondary btn-sm" onclick="window.App.openFinding('F-07-01')">
+                Inspect 318 Uninvestigated Records
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="window.App.openDirectiveModal('Confirmed Finding')">
+                Issue Statutory Notice
+              </button>
+            </div>
+          </div>
+
+          <!-- Why Flagged Accordion Drawer -->
+          <div class="top-finding-why-drawer" id="hero-why-drawer">
+            <div class="why-drawer-card glass-card">
+              <h5>
+                <span style="color: var(--status-critical);">●</span> 1. Database Foreign Key Discrepancy
+              </h5>
+              <p>
+                In 318 critical alerts, the foreign key <code>investigation_ticket_id</code> is <code>NULL</code>,
+                proving alerts transitioned directly from 'Acknowledged' to 'Closed' without opening mandatory
+                investigation cases.
+              </p>
+            </div>
+            <div class="why-drawer-card glass-card">
+              <h5>
+                <span style="color: var(--status-warning);">●</span> 2. Anomalous Closure Velocity
+              </h5>
+              <p>
+                Average closure duration for Category-A critical grid assets was 7.08 minutes, compared to national peer
+                median of 46.2 minutes, indicating superficial SOP bypass.
+              </p>
+            </div>
+            <div class="why-drawer-card glass-card">
+              <h5>
+                <span style="color: var(--accent-theme);">●</span> 3. Statutory Mandate Breach
+              </h5>
+              <p>
+                NCIIPC Guideline Section 4.2 explicitly mandates evidentiary forensic capture for all SCADA perimeter
+                anomalies prior to ticket disposition.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7 Core Stat Cards with User-Mandated Labels -->
+        <div class="stat-cards-grid">
+          <div class="stat-card-box alert-cyan glass-card" onclick="window.App.filterBySector('All')">
+            <span class="stat-card-label">Monitored Entities</span>
+            <span class="stat-card-number" id="stat-total-cses">20</span>
+            <span class="stat-card-subtext">Critical infrastructure</span>
+          </div>
+
+          <div class="stat-card-box glass-card" onclick="window.App.navigateTo('evidence-explorer')">
+            <span class="stat-card-label">Alerts Normalized</span>
+            <span class="stat-card-number" id="stat-total-alerts">54,230</span>
+            <span class="stat-card-subtext">From submitted logs</span>
+          </div>
+
+          <div class="stat-card-box glass-card" onclick="window.App.openGraph('CASE-GRAPH-07-01')">
+            <span class="stat-card-label">Lifecycle Cases</span>
+            <span class="stat-card-number" id="stat-total-cases">4,890</span>
+            <span class="stat-card-subtext">Reconstructed chains</span>
+          </div>
+
+          <div class="stat-card-box alert-red glass-card" onclick="window.App.filterByAttention('High')">
+            <span class="stat-card-label">Requiring Attention</span>
+            <span class="stat-card-number" style="color: var(--status-critical);" id="stat-attention-cses">7</span>
+            <span class="stat-card-subtext">Supervisory attention threshold</span>
+          </div>
+
+          <div class="stat-card-box alert-amber glass-card" onclick="window.App.openFinding('F-07-01')">
+            <span class="stat-card-label">Execution Gaps</span>
+            <span class="stat-card-number" style="color: var(--status-warning);" id="stat-exec-gaps">42</span>
+            <span class="stat-card-subtext">Uninvestigated closures</span>
+          </div>
+
+          <div class="stat-card-box alert-red glass-card" onclick="window.App.openFinding('F-07-02')">
+            <span class="stat-card-label">Negative Space</span>
+            <span class="stat-card-number" id="stat-neg-space">28</span>
+            <span class="stat-card-subtext">Critical assets with insufficient telemetry</span>
+          </div>
+
+          <div class="stat-card-box glass-card" onclick="window.App.openFinding('F-07-03')">
+            <span class="stat-card-label">Contradictions</span>
+            <span class="stat-card-number" id="stat-contradictions">19</span>
+            <span class="stat-card-subtext">Cross-source contradictions</span>
+          </div>
+        </div>
+
+        <!-- Filter & Search Bar -->
+        <div class="glass-card"
+          style="display: flex; align-items: center; justify-content: space-between; gap: 14px; background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 12px 18px; border-radius: var(--radius-md);">
+          <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+            <input type="text" id="filter-search-input" class="form-control"
+              style="width: 280px; padding: 8px 14px; font-size: 13px;" placeholder="Search CSE code, name, sector..."
+              oninput="window.App.handleSearch(this.value)">
+
+            <select class="form-select" id="filter-sector-select"
+              style="width: 220px; padding: 8px 14px; cursor: pointer;" onchange="window.App.handleFilter()">
+              <option value="All">All Critical Sectors (12)</option>
+              <option value="Power & Energy Grid">Power & Energy Grid</option>
+              <option value="Financial Services & Banking">Financial Services & Banking</option>
+              <option value="Telecommunications & Defense">Telecommunications & Defense</option>
+              <option value="Transportation & Rail">Transportation & Rail</option>
+              <option value="Petroleum & Natural Gas">Petroleum & Natural Gas</option>
+              <option value="Civil Aviation">Civil Aviation</option>
+              <option value="Atomic Energy & Nuclear">Atomic Energy & Nuclear</option>
+              <option value="Maritime & Ports">Maritime & Ports</option>
+              <option value="Healthcare & Public Health">Healthcare</option>
+            </select>
+
+            <select class="form-select" id="filter-attention-select"
+              style="width: 180px; padding: 8px 14px; cursor: pointer;" onchange="window.App.handleFilter()">
+              <option value="All">All Attention Levels</option>
+              <option value="High">High Attention Only</option>
+              <option value="Medium">Medium Attention</option>
+              <option value="Low">Low (Compliant Baseline)</option>
+            </select>
+          </div>
+
+          <div style="font-size: 12px; color: var(--text-muted); font-family: var(--font-mono);">
+            Ranked by Cumulative Attention Score
+          </div>
+        </div>
+
+        <!-- 20 CSE Attention Table -->
+        <div class="content-card-shell glass-card">
+          <div class="card-topbar">
+            <div class="card-topbar-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M12 2L2 7l10 5 10-5-10-5z"></path>
+                <path d="M2 17l10 5 10-5"></path>
+                <path d="M2 12l10 5 10-5"></path>
+              </svg>
+              Critical Sector Entities (CSEs) Statutory Queue
+            </div>
+            <span class="card-topbar-subtitle">20 Monitored Entities • Click any entity row to inspect operational
+              findings</span>
+          </div>
+
+          <div class="table-scroll-container">
+            <table class="supervisory-table">
+              <thead>
+                <tr>
+                  <th>Entity Code</th>
+                  <th>Entity Name & Critical Sector</th>
+                  <th>Supervisory Attention</th>
+                  <th>Attention Score</th>
+                  <th>Dominant Operational Signal</th>
+                  <th style="text-align: center;">Findings</th>
+                  <th style="text-align: right;">Action</th>
+                </tr>
+              </thead>
+              <tbody id="cses-table-tbody">
+                <!-- Populated dynamically via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================================
+           SCREEN 2: CSE DETAIL (CSE-07 NORTHERN POWER GRID)
+           ================================================================== -->
+      <section class="view-screen" id="screen-cse-detail">
+
+        <!-- CSE Dynamic Switcher Bar -->
+        <div class="glass-card"
+          style="display: flex; align-items: center; justify-content: space-between; gap: 14px; background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 12px 20px; border-radius: var(--radius-md);">
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <button class="btn btn-secondary btn-sm" onclick="window.App.navigateTo('dashboard')">
+              ← Back to Command Overview
+            </button>
+            <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Switch
+              Monitored CSE:</span>
+            <select class="form-select" id="cse-assessment-selector" style="width: 320px; font-weight: 700;"
+              onchange="window.App.openCse(this.value)">
+              <!-- Populated dynamically with all 20 CSEs -->
+            </select>
+          </div>
+          <div style="font-size: 12px; font-family: var(--font-mono); color: var(--accent-theme); font-weight: 700;">
+            NCIIPC Air-Gapped Supervisory Audit
+          </div>
+        </div>
+
+        <!-- CSE Hero Box -->
+        <div class="cse-hero-box glass-card">
+          <div class="cse-meta-info">
+            <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+              <span class="badge badge-tag" id="cse-view-id">CSE-07</span>
+              <span class="badge badge-high" id="cse-view-attention-badge">SUPERVISORY ATTENTION: HIGH</span>
+            </div>
+            <h2 id="cse-view-name" class="gradient-text-hero">Northern Regional Load Despatch Centre (NRLDC)</h2>
+            <p id="cse-view-desc">
+              Grid SCADA and RTU audit logs reveal critical alerts closed without mandatory case investigation,
+              alongside designated Category-A assets logging zero telemetry despite active monitoring declarations.
+            </p>
+          </div>
+
+          <div class="score-display-card">
+            <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+              SUPERVISORY ATTENTION</div>
+            <div class="score-val" id="cse-view-score">87 <span
+                style="font-size: 16px; color: var(--text-muted); font-weight: 500;">/ 100</span></div>
+            <div style="font-size: 11px; color: var(--text-secondary); line-height: 1.5;" id="cse-view-score-breakdown">
+              Execution Gap: +25 | Negative Space: +20 | Contradiction: +18 | Recurring: +14 | Peer: +10
+            </div>
+            <div style="font-size: 10px; color: var(--accent-theme); margin-top: 4px; font-weight: 700;">Transparent
+              Additive Vector</div>
+          </div>
+        </div>
+
+        <!-- Integrity Breakdown Metric Cards -->
+        <div class="stat-cards-grid">
+          <div class="stat-card-box alert-red glass-card">
+            <span class="stat-card-label">Execution Gaps</span>
+            <span class="stat-card-number" id="cse-metric-gaps">17</span>
+            <span class="stat-card-subtext">Uninvestigated closures</span>
+          </div>
+
+          <div class="stat-card-box alert-red glass-card">
+            <span class="stat-card-label">Negative Space</span>
+            <span class="stat-card-number" id="cse-metric-neg">9</span>
+            <span class="stat-card-subtext">Silent declared assets</span>
+          </div>
+
+          <div class="stat-card-box alert-amber glass-card">
+            <span class="stat-card-label">Contradictions</span>
+            <span class="stat-card-number" id="cse-metric-contradictions">6</span>
+            <span class="stat-card-subtext">Post-remediation repeats</span>
+          </div>
+
+          <div class="stat-card-box alert-amber glass-card">
+            <span class="stat-card-label">Recurring Risks</span>
+            <span class="stat-card-number" id="cse-metric-recurring">8</span>
+            <span class="stat-card-subtext">Unresolved exposures</span>
+          </div>
+
+          <div class="stat-card-box alert-cyan glass-card">
+            <span class="stat-card-label">Evidence Coverage</span>
+            <span class="stat-card-number" id="cse-metric-coverage">71%</span>
+            <span class="stat-card-subtext">Complete workflow compliance</span>
+          </div>
+        </div>
+
+        <!-- Findings List -->
+        <div class="content-card-shell glass-card">
+          <div class="card-topbar">
+            <div class="card-topbar-title">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              Operational Integrity Findings
+            </div>
+            <span class="card-topbar-subtitle">Click any finding to inspect why it was flagged & review source
+              evidence</span>
+          </div>
+
+          <div class="findings-stack" id="cse-findings-container">
+            <!-- Populated via JS -->
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================================
+           SCREEN 3: FINDING DETAILS (EVIDENTIARY GROUNDS)
+           ================================================================== -->
+      <section class="view-screen" id="screen-finding-detail">
+
+        <div class="content-card-shell glass-card" style="padding: 24px;">
+
+          <div
+            style="display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; flex-wrap: wrap;">
+            <div>
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+                <span class="badge badge-tag" id="finding-view-cse-code">CSE-07 — NRLDC</span>
+                <span class="badge badge-tag" id="finding-view-category">Execution Gap</span>
+                <span class="badge badge-high" id="finding-view-severity">CRITICAL</span>
+              </div>
+              <h2 style="font-size: 24px; font-weight: 800; color: var(--text-main);" id="finding-view-title"
+                class="gradient-text-hero">
+                Critical Alert Investigation Gap
+              </h2>
+              <p style="font-size: 14.5px; color: var(--text-secondary); margin-top: 6px;"
+                id="finding-view-explanation">
+                318 critical alerts have no corresponding investigation record in submitted SOC case logs.
+              </p>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+              <button class="btn btn-primary" onclick="window.App.openGraph('CASE-GRAPH-07-01')">
+                VIEW SUPERVISORY EVIDENCE GRAPH →
+              </button>
+            </div>
+          </div>
+
+          <!-- Disparity Metric Bar -->
+          <div class="finding-disparity-bar glass-card">
+            <div class="disparity-metric-cell">
+              <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+                Critical Alerts Generated</div>
+              <div class="disparity-cell-num" id="finding-metric-alerts">2,430</div>
+            </div>
+            <div class="disparity-metric-cell">
+              <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+                Investigations Opened</div>
+              <div class="disparity-cell-num" id="finding-metric-invs">2,112</div>
+            </div>
+            <div class="disparity-metric-cell">
+              <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+                Potential Execution Gaps</div>
+              <div class="disparity-cell-num" style="color: var(--status-critical);" id="finding-metric-gaps">318</div>
+            </div>
+            <div class="disparity-metric-cell">
+              <div style="font-size: 11px; text-transform: uppercase; color: var(--text-muted); font-weight: 700;">
+                Statutory Rule Mandate</div>
+              <div
+                style="font-size: 14px; font-weight: 800; color: var(--accent-theme); font-family: var(--font-mono); margin-top: 6px;"
+                id="finding-metric-rule">NCIIPC Sec 4.2</div>
+            </div>
+          </div>
+
+          <!-- Why Flagged Box -->
+          <div class="why-flagged-box glass-card">
+            <div
+              style="font-size: 12px; font-weight: 800; text-transform: uppercase; color: var(--status-critical); letter-spacing: 0.6px; display: flex; align-items: center; gap: 8px;">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+              STATUTORY GROUNDS FOR AUDIT FLAG (UNAMBIGUOUS DATABASE DISCREPANCIES)
+            </div>
+            <ul class="why-flagged-list" id="finding-reasons-container">
+              <!-- Populated via JS -->
+            </ul>
+          </div>
+
+          <!-- Supporting Records Table -->
+          <div class="content-card-shell glass-card" style="margin-bottom: 20px;">
+            <div class="card-topbar">
+              <div class="card-topbar-title">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                Supporting Uninvestigated Records (Sample Log Rows)
+              </div>
+              <span class="card-topbar-subtitle">Database proof: investigation_id field is NULL</span>
+            </div>
+
+            <div class="table-scroll-container">
+              <table class="supervisory-table">
+                <thead>
+                  <tr>
+                    <th>Alert ID</th>
+                    <th>Severity</th>
+                    <th>Closure Status</th>
+                    <th>Investigation Ticket</th>
+                    <th>Asset & Critical Role</th>
+                    <th>Timestamp</th>
+                    <th style="text-align: right;">Graph View</th>
+                  </tr>
+                </thead>
+                <tbody id="finding-records-tbody">
+                  <!-- Populated via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Human-in-the-Loop Review Box -->
+          <div class="glass-card"
+            style="background: var(--bg-surface-elevated); border: 1px solid var(--border-medium); border-radius: var(--radius-md); padding: 20px;">
+            <div
+              style="font-size: 12px; font-weight: 700; text-transform: uppercase; color: var(--text-secondary); margin-bottom: 10px;">
+              HUMAN-IN-THE-LOOP: POTENTIAL OPERATIONAL EXPLANATIONS
+            </div>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px;" id="finding-explanations-tags">
+              <!-- Tags via JS -->
+            </div>
+
+            <div
+              style="border-top: 1px solid var(--border-subtle); padding-top: 14px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px;">
+              <div style="font-size: 12px; color: var(--text-muted);">
+                Supervisor Directive: SENTINEL-X equips the human supervisor with complete evidence. The supervisor
+                issues the statutory disposition.
+              </div>
+              <div style="display: flex; gap: 10px; flex-wrap: wrap;">
+                <button class="btn btn-primary btn-sm" onclick="window.App.openDirectiveModal('Confirmed Finding')">
+                  Confirm Statutory Violation (Issue Notice)
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="window.App.openDirectiveModal('Under Clarification')">
+                  Request Entity Clarification
+                </button>
+                <button class="btn btn-secondary btn-sm" onclick="window.App.openDirectiveModal('False Positive')">
+                  Record Exception
+                </button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================================
+           SCREEN 4: SUPERVISORY EVIDENCE GRAPH (HERO FEATURE)
+           ================================================================== -->
+      <section class="view-screen" id="screen-evidence-graph">
+
+        <!-- Case Switcher Toolbar -->
+        <div class="graph-toolbar-row glass-card">
+          <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+            <span style="font-size: 11px; text-transform: uppercase; font-weight: 700; color: var(--text-muted);">SELECT
+              AUDIT CASE:</span>
+            <div class="case-select-btns">
+              <button class="case-btn active" data-case="CASE-GRAPH-07-01"
+                onclick="window.EvidenceGraph.loadCase('CASE-GRAPH-07-01')">
+                Alert A-10231 (Execution Gap: Missing Investigation)
+              </button>
+              <button class="case-btn" data-case="CASE-GRAPH-07-02"
+                onclick="window.EvidenceGraph.loadCase('CASE-GRAPH-07-02')">
+                Asset TEL-8812 (Negative Space: Zero Telemetry)
+              </button>
+              <button class="case-btn" data-case="CASE-GRAPH-07-03"
+                onclick="window.EvidenceGraph.loadCase('CASE-GRAPH-07-03')">
+                Case A-10891 (Contradiction: Post-Remediation Repeat)
+              </button>
+              <button class="case-btn" data-case="CASE-GRAPH-01-01"
+                onclick="window.EvidenceGraph.loadCase('CASE-GRAPH-01-01')">
+                Case A-99014 (Baseline Compliant Chain)
+              </button>
+            </div>
+          </div>
+
+          <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono);">
+            <span style="color: var(--status-success); font-weight: 700;">● Verified</span> &nbsp;|&nbsp;
+            <span style="color: var(--status-critical); font-weight: 700;">● Missing Step</span> &nbsp;|&nbsp;
+            <span style="color: var(--status-warning); font-weight: 700;">● Bypassed SOP</span>
+          </div>
+        </div>
+
+        <!-- Scenario Summary -->
+        <div class="glass-card"
+          style="background: var(--bg-surface); border: 1px solid var(--border-subtle); padding: 12px 18px; border-radius: var(--radius-sm); font-size: 13.5px; color: var(--text-main);"
+          id="graph-scenario-summary">
+          Reconstructing operational evidence lifecycle chain...
+        </div>
+
+        <!-- Split View: Canvas + Inspector Drawer -->
+        <div class="graph-viewport-split">
+
+          <!-- Graph Flow Canvas -->
+          <div class="graph-canvas-area glass-card">
+            <div class="track-flow" id="graph-track-nodes">
+              <!-- Dynamically populated via evidence_graph.js -->
+            </div>
+          </div>
+
+          <!-- Node Inspector Drawer -->
+          <div class="inspector-drawer glass-card">
+            <div
+              style="border-bottom: 1px solid var(--border-subtle); padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center;">
+              <h4 style="font-size: 14px; font-weight: 700; color: var(--text-main);">Workflow Stage Details</h4>
+              <span class="badge badge-tag" style="font-size: 9px;">PROVENANCE</span>
+            </div>
+
+            <div id="inspector-drawer-content">
+              <p style="color: var(--text-muted); font-size: 13px;">Click any lifecycle node in the graph to view
+                technical details, timestamps, and foreign key verification.</p>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================================
+           SCREEN 5: EVIDENCE EXPLORER (SOURCE LOGS)
+           ================================================================== -->
+      <section class="view-screen" id="screen-evidence-explorer">
+
+        <div class="content-card-shell glass-card">
+          <div class="card-topbar">
+            <div>
+              <div class="card-topbar-title">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                  <polyline points="14 2 14 8 20 8"></polyline>
+                </svg>
+                Underlying Source Records & Provenance Verification
+              </div>
+              <div class="card-topbar-subtitle" style="margin-top: 4px;">
+                Demonstrates that SENTINEL-X does not compute random scores — every finding is backed by source logs and
+                database foreign keys
+              </div>
+            </div>
+          </div>
+
+          <div class="table-scroll-container">
+            <table class="supervisory-table">
+              <thead>
+                <tr>
+                  <th>Record ID</th>
+                  <th>Alert ID</th>
+                  <th>Asset ID</th>
+                  <th>CSE Code</th>
+                  <th>Severity</th>
+                  <th>Category / Description</th>
+                  <th>Investigation Status</th>
+                  <th>Audit Discrepancy</th>
+                  <th style="text-align: right;">Graph View</th>
+                </tr>
+              </thead>
+              <tbody id="explorer-records-tbody">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+
+      <!-- ==================================================================
+           SCREEN 6: OFFICIAL NCIIPC DIRECTIVE REPORT
+           ================================================================== -->
+      <section class="view-screen" id="screen-reports">
+
+        <div
+          style="display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 12px;">
+          <div style="display: flex; align-items: center; gap: 10px;">
+            <span style="font-size: 12px; font-weight: 700; color: var(--text-muted); text-transform: uppercase;">Entity
+              Directive Report:</span>
+            <select class="form-select" id="report-cse-selector" style="width: 320px; font-weight: 700;"
+              onchange="window.App.loadReportView(this.value)">
+              <!-- Populated dynamically with all 20 CSEs -->
+            </select>
+          </div>
+
+          <button class="btn btn-primary" onclick="window.print()">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="6 9 6 2 18 2 18 9"></polyline>
+              <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+              <rect x="6" y="14" width="12" height="8"></rect>
+            </svg>
+            Print / Save Directive Briefing PDF
+          </button>
+        </div>
+
+        <div
+          style="background: #FFFFFF; color: #0F172A; border-radius: var(--radius-md); padding: 40px; max-width: 900px; margin: 0 auto; box-shadow: 0 10px 40px rgba(0,0,0,0.15); border: 1px solid #CBD5E1;">
+          <div
+            style="border-bottom: 2px solid #0F172A; padding-bottom: 16px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-end;">
+            <div>
+              <h4
+                style="font-size: 11px; letter-spacing: 1.5px; text-transform: uppercase; color: #475569; font-weight: 800;">
+                NATIONAL CRITICAL INFORMATION INFRASTRUCTURE PROTECTION CENTRE (NCIIPC)
+              </h4>
+              <h2 style="font-size: 22px; font-weight: 900; margin-top: 4px; color: #0F172A;">SUPERVISORY SOC AUDIT
+                DIRECTIVE</h2>
+              <div style="font-size: 12px; color: #64748B; margin-top: 2px;" id="report-view-classification-bar">
+                Issued under Information Technology Act Section 70A • Mandate 2026/Q3
+              </div>
+            </div>
+            <div style="text-align: right;">
+              <div
+                style="font-size: 10px; font-weight: 800; background: #DC2626; color: #FFFFFF; padding: 3px 8px; border-radius: 4px;">
+                CONFIDENTIAL // NCIIPC DIRECTIVE</div>
+              <div style="font-size: 11px; margin-top: 4px; font-family: monospace; color: #334155;"
+                id="report-view-date">04 Oct 2026 14:15 IST</div>
+            </div>
+          </div>
+
+          <div
+            style="display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 24px; padding-bottom: 16px; border-bottom: 1px solid #E2E8F0;">
+            <div>
+              <div style="font-size: 11px; text-transform: uppercase; color: #64748B; font-weight: 700;">Audited Entity
+              </div>
+              <h3 style="font-size: 17px; font-weight: 800; color: #0F172A;" id="report-view-cse-title">CSE-07 —
+                Northern Regional Load Despatch Centre (NRLDC)</h3>
+              <p style="font-size: 12px; color: #475569; margin-top: 4px;" id="report-view-cse-sector">Sector: Power &
+                Energy Grid Infrastructure</p>
+            </div>
+            <div style="text-align: right;">
+              <div style="font-size: 11px; text-transform: uppercase; color: #64748B; font-weight: 700;">Supervisory
+                Attention Score</div>
+              <div style="font-size: 32px; font-weight: 900; color: #DC2626;" id="report-view-score">87 / 100</div>
+            </div>
+          </div>
+
+          <div style="margin-bottom: 24px;">
+            <h4
+              style="font-size: 13px; text-transform: uppercase; margin-bottom: 8px; color: #0F172A; font-weight: 800;">
+              Supervisory Findings Summary</h4>
+            <table class="supervisory-table" style="color: #0F172A; width: 100%;">
+              <thead>
+                <tr style="background: #F1F5F9;">
+                  <th style="color: #0F172A;">Ref</th>
+                  <th style="color: #0F172A;">Finding Description</th>
+                  <th style="color: #0F172A;">Category</th>
+                  <th style="color: #0F172A;">Severity</th>
+                  <th style="color: #0F172A;">Evidence Basis</th>
+                </tr>
+              </thead>
+              <tbody id="report-table-tbody" style="color: #1E293B;">
+                <!-- Populated via JS -->
+              </tbody>
+            </table>
+          </div>
+
+          <div style="background: #F1F5F9; border-left: 4px solid #DC2626; padding: 14px 18px; border-radius: 4px;">
+            <h4 style="font-size: 12px; text-transform: uppercase; color: #0F172A; font-weight: 800;">Regulatory
+              Directive:</h4>
+            <p style="font-size: 13px; color: #1E293B; margin-top: 4px;" id="report-view-directive-text">
+              Initiate Category-A formal compliance review regarding uninvestigated critical alerts and telemetry blind
+              spots within 14 calendar days.
+            </p>
+          </div>
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ====================================================================
+       MODAL 1: UPLOAD / INGEST SOC DATASET
+       ==================================================================== -->
+  <div class="modal-backdrop" id="upload-modal">
+    <div class="modal-container glass-card">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+        <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main);">Ingest SOC Alert / Telemetry Dataset
+        </h3>
+        <button class="btn btn-secondary btn-sm" onclick="window.App.closeUploadModal()">✕</button>
+      </div>
+
+      <p style="font-size: 12.5px; color: var(--text-secondary);">
+        Upload offline CSV/JSON exports from CSE SIEM or ticketing databases. SENTINEL-X reconciles mandatory SOP
+        lifecycles and reconstructs the audit evidence graph.
+      </p>
+
+      <!-- One-Click Sample Ingestion Button -->
+      <div
+        style="background: var(--bg-surface-elevated); border: 1.5px solid var(--accent-theme); border-radius: var(--radius-md); padding: 16px; display: flex; align-items: center; justify-content: space-between; gap: 14px;">
+        <div>
+          <div style="font-weight: 800; font-size: 13.5px; color: var(--text-main);">Evaluator 1-Click Sample Dataset
+          </div>
+          <div style="font-size: 11.5px; color: var(--text-muted); margin-top: 2px;">Load 1,420 simulated SOC telemetry
+            events across 20 CSEs</div>
+        </div>
+        <button class="btn btn-primary btn-sm" onclick="window.App.loadSampleData()">
+          ⚡ Load & Reconcile Sample Data
+        </button>
+      </div>
+
+      <!-- File Upload Dropzone -->
+      <div
+        style="border: 2px dashed var(--border-medium); border-radius: var(--radius-md); padding: 28px 20px; text-align: center; cursor: pointer; transition: all 0.2s;"
+        onclick="document.getElementById('file-upload-input').click()">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"
+          style="margin-bottom: 8px; color: var(--accent-theme);">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="17 8 12 3 7 8"></polyline>
+          <line x1="12" y1="3" x2="12" y2="15"></line>
+        </svg>
+        <div style="font-weight: 700; color: var(--text-main); font-size: 13.5px;">Click to select SOC export file (.csv
+          / .json)</div>
+        <div style="font-size: 11px; color: var(--text-muted); margin-top: 4px;">Supports Elastic, Splunk, Sentinel &
+          Custom CSE schemas</div>
+        <input type="file" id="file-upload-input" style="display: none;"
+          onchange="window.App.handleFileUpload(this.files[0])">
+      </div>
+
+      <div id="upload-status-msg"
+        style="font-size: 12.5px; color: var(--accent-theme); text-align: center; min-height: 20px; font-weight: 600;">
+      </div>
+
+      <div style="display: flex; justify-content: flex-end; gap: 8px;">
+        <button class="btn btn-secondary" onclick="window.App.closeUploadModal()">Close</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       MODAL 2: SUPERVISOR DIRECTIVE DECISION MODAL
+       ==================================================================== -->
+  <div class="modal-backdrop" id="directive-modal">
+    <div class="modal-container glass-card">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge badge-high" id="modal-directive-badge">STATUTORY ACTION</span>
+          <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main);">Issue Supervisory Directive Order</h3>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="window.App.closeDirectiveModal()">✕</button>
+      </div>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="form-group">
+          <label class="form-label">Target Critical Sector Entity</label>
+          <input type="text" class="form-control" id="modal-directive-cse" readonly value="CSE-07 — NRLDC">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Statutory Notice Reference</label>
+          <input type="text" class="form-control" id="modal-directive-ref" readonly value="DIR-2026-NCIIPC-70A-091">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Supervisory Finding & Grounds</label>
+        <input type="text" class="form-control" id="modal-directive-title" readonly
+          value="F-07-01: Critical Alert Investigation Gap (318 Records)">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Directive Disposition Order</label>
+        <select class="form-select" id="modal-directive-action-type">
+          <option value="Confirmed Finding">Formal Statutory Violation Notice (Sec 70A Mandatory Compliance)</option>
+          <option value="Under Clarification">Official Clarification Request (14-Day Response Mandate)</option>
+          <option value="False Positive">Record Validated Operational Exception (Audit Dossier Archived)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Supervisor Mandate Directives & Remediation Requirements</label>
+        <textarea class="form-textarea" id="modal-directive-notes" rows="3"
+          placeholder="Enter explicit regulatory instructions for the entity CISO / SOC Director...">Formal notice issued under IT Act Sec 70A. The entity must submit forensic audit trail and explain root cause for 318 uninvestigated critical alert closures within 14 calendar days.</textarea>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Statutory Compliance Deadline</label>
+        <select class="form-select" id="modal-directive-deadline">
+          <option value="7">7 Calendar Days (Critical Grid Urgency)</option>
+          <option value="14" selected>14 Calendar Days (Standard NCIIPC Mandate)</option>
+          <option value="30">30 Calendar Days (Structural Audit Review)</option>
+        </select>
+      </div>
+
+      <div
+        style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-subtle); padding-top: 14px;">
+        <button class="btn btn-secondary" onclick="window.App.closeDirectiveModal()">Cancel</button>
+        <button class="btn btn-primary" onclick="window.App.submitDirective()">
+          Sign & Dispatch Directive Order ➔
+        </button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ====================================================================
+       MODAL 3: RAW DATABASE RECORD & SQL RECONCILIATION PROOF (Point 10)
+       ==================================================================== -->
+  <div class="modal-backdrop" id="raw-record-modal">
+    <div class="modal-container glass-card" style="max-width: 780px;">
+      <div
+        style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-subtle); padding-bottom: 12px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <span class="badge badge-low"
+            style="background: rgba(14, 165, 233, 0.2); color: var(--accent-theme); border: 1px solid rgba(14, 165, 233, 0.4); font-weight: 800;">SQL
+            PROOF</span>
+          <h3 style="font-size: 16px; font-weight: 800; color: var(--text-main);" id="raw-record-modal-title">Raw Source
+            Record & Join Reconciliation</h3>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="window.App.closeRawRecordModal()">✕</button>
+      </div>
+
+      <p style="font-size: 12.5px; color: var(--text-secondary); margin-top: 6px;">
+        Unedited database row extracted directly from the SIEM alert ingress table and correlated against the
+        investigation case store. Demonstrates zero machine learning hallucination: the foreign key is physically
+        missing.
+      </p>
+
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 10px;">
+        <div
+          style="background: var(--bg-surface-elevated); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+          <div style="font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Primary
+            Key & Source</div>
+          <div
+            style="font-size: 13px; font-weight: 700; color: var(--accent-cyan); font-family: var(--font-mono); margin-top: 2px;"
+            id="raw-modal-alert-id">A-10231</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Source Table: <code>soc_alerts</code></div>
+        </div>
+        <div
+          style="background: var(--bg-surface-elevated); padding: 10px 14px; border-radius: var(--radius-sm); border: 1px solid var(--border-subtle);">
+          <div style="font-size: 10px; font-weight: 800; color: var(--text-muted); text-transform: uppercase;">Foreign
+            Key Relationship</div>
+          <div
+            style="font-size: 13px; font-weight: 700; color: var(--status-critical); font-family: var(--font-mono); margin-top: 2px;"
+            id="raw-modal-investigation-fk">investigation_ticket_id: NULL</div>
+          <div style="font-size: 11px; color: var(--text-muted);">Cross-Ref: <code>investigation_cases</code> (NO MATCH)
+          </div>
+        </div>
+      </div>
+
+      <!-- SQL Join Reconciliation Box -->
+      <div style="margin-top: 14px;">
+        <div
+          style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--accent-theme-light); letter-spacing: 0.5px; margin-bottom: 6px;">
+          CROSS-SOURCE DATABASE RECONCILIATION QUERY
+        </div>
+        <pre class="sql-code-block" id="raw-modal-sql">SELECT 
+    a.alert_id, 
+    a.asset_id, 
+    a.severity, 
+    a.created_at, 
+    a.status,
+    i.case_id, 
+    i.investigator_id, 
+    i.triage_notes
+FROM soc_alerts a
+LEFT JOIN investigation_cases i 
+    ON a.alert_id = i.alert_id
+WHERE a.alert_id = 'A-10231';
+
+-- Result: 1 row returned.
+-- a.alert_id = 'A-10231', i.case_id = NULL, i.investigator_id = NULL
+-- Provenance: Foreign-Key execution gap confirmed.</pre>
+      </div>
+
+      <!-- JSON Raw Record Content -->
+      <div style="margin-top: 14px;">
+        <div
+          style="font-size: 11px; font-weight: 800; text-transform: uppercase; color: var(--text-muted); letter-spacing: 0.5px; margin-bottom: 6px;">
+          RAW INGESTED JSON PAYLOAD
+        </div>
+        <pre class="json-code-block" id="raw-modal-json">{
+  "alert_id": "A-10231",
+  "asset_id": "SERVER-17",
+  "asset_name": "EMS-SCADA Front End Processor 01",
+  "cse_code": "CSE-07",
+  "severity": "CRITICAL",
+  "status": "CLOSED",
+  "investigation_ticket_id": null,
+  "created_at": "2026-10-04T14:32:10+05:30",
+  "acknowledged_at": "2026-10-04T14:35:12+05:30",
+  "closed_at": "2026-10-04T14:39:12+05:30",
+  "closure_reason": "Automated routine disposition",
+  "expected_action": "Forensic host check + process tree + netstat",
+  "actual_action": "No SIEM/EDR investigation query found"
+}</pre>
+      </div>
+
+      <div
+        style="display: flex; justify-content: flex-end; gap: 10px; border-top: 1px solid var(--border-subtle); padding-top: 14px; margin-top: 14px;">
+        <button class="btn btn-secondary" onclick="window.App.closeRawRecordModal()">Close Record View</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- SCRIPTS -->
+  <script src="/static/js/evidence_graph.js?v=7.0"></script>
+  <script src="/static/js/app.js?v=7.0"></script>
+
+</body>
+
+</html>
