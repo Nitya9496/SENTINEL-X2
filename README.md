@@ -204,7 +204,4 @@ d:\SENTINEL-X\
 * **Distributed Peer Federated Baselines:** Privacy-preserving cross-entity benchmark modeling without exposing raw tenant logs.
 * **Live Kafka / Syslog Air-Gapped Tap:** Real-time ingestion engine for SCADA historian streaming.
 
----
-
-xnfrastructure Protection Centre (NCIIPC) Supervisory Oversight Framework.*
-
+*National Critical Information Infrastructure Protection Centre (NCIIPC) Supervisory Oversight Framework.*
