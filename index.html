@@ -5,7 +5,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>SENTINEL-X — Supervisory Analytics Tool for SOC Assessment (SAT-SA)</title>
-  <link rel="stylesheet" href="/static/css/styles.css?v=7.0">
+  <script>
+    try { localStorage.removeItem('sentinel_theme_user_choice'); } catch(e) {}
+    document.documentElement.setAttribute('data-theme', 'dark');
+  </script>
+  <link rel="stylesheet" href="/static/css/styles.css?v=8.0">
 </head>
 
 <body>
@@ -1115,8 +1119,8 @@ WHERE a.alert_id = 'A-10231';
 
 
   <!-- SCRIPTS -->
-  <script src="/static/js/evidence_graph.js?v=7.0"></script>
-  <script src="/static/js/app.js?v=7.0"></script>
+  <script src="/static/js/evidence_graph.js?v=8.0"></script>
+  <script src="/static/js/app.js?v=8.0"></script>
 
 </body>
 

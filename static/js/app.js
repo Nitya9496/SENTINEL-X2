@@ -22,11 +22,13 @@ window.App = {
   },
 
   initTheme() {
+    try {
+      localStorage.removeItem('sentinel_theme_user_choice');
+    } catch(e) {}
     let theme = 'dark';
     try {
-      const userTheme = localStorage.getItem('sentinel_theme_user_choice');
-      if (userTheme === 'light') theme = 'light';
-      else if (userTheme === 'dark') theme = 'dark';
+      const saved = sessionStorage.getItem('sentinel_session_theme');
+      if (saved === 'light') theme = 'light';
     } catch(e) {}
     this.setTheme(theme);
   },
@@ -36,7 +38,8 @@ window.App = {
     const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
     this.setTheme(newTheme);
     try {
-      localStorage.setItem('sentinel_theme_user_choice', newTheme);
+      sessionStorage.setItem('sentinel_session_theme', newTheme);
+      localStorage.removeItem('sentinel_theme_user_choice');
     } catch(e) {}
     if (typeof this.showToast === 'function') {
       this.showToast(`Switched to ${newTheme === 'dark' ? 'Cyber Dark Mode' : 'Executive Light Theme'}`);
